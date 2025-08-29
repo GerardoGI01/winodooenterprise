@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_hr_contract_extended" model="ir.ui.view">
+      <field name="name">hr.contract.inherit</field>
+      <field name="model">hr.contract</field>
+      <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+      <field name="arch" type="xml">
+
+        <xpath expr="//div[@name='wage']" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+
+        <xpath expr="//field[@name='wage_type']" position="after">
+          <field name="custom_wage"/>
+        </xpath>
+
+        <xpath expr="//group[@name='yearly_benefits']" position="inside">
+          <field name="insurance_contract"/>
+          <field name="company_id_contract" invisible="1"/>
+          <field name="funeral_contract"/>
+          <field name="loan_contract"/>
+          <field name="bearing_contract" invisible="company_id_contract != 'Center Source Panama Ops'"/>
+          <field name="discount_contract"/>
+          <field name="interest_contract"/>
+          <field name="embargos_contract"/>
+          <field name="is_pensioner"/>
+          <field name="is_attachment"/>
+        </xpath>
+
+      </field>
+    </record>
+</odoo>

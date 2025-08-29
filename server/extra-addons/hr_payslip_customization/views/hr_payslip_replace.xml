@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="hr_payroll_report_payslip_custom_inherit" inherit_id="hr_payroll.report_payslip">
+
+      <xpath expr="//tr[@id='line_display']" position="replace">
+
+        <t t-set="code_list" t-value="['total_dev', 'ded_pension', 'sub_trans', 'IBC_SS_1', 'd_30', 'd_OUT', 'd_vac_comp', 'd_vac', 'd_inc_gen', 'd_inc_gen_2', 'pr_quin_ant', 'd_inc_prof', 'd_lic_mat', 'd_lic_pat', 'd_lic_rem', 'd_lic_no_rem', 'd_lic_susp', 'd_lic_aband', 'd_trab', 'salario_base', 'HEO', 'HEN', 'HEOD', 'HEND', 'RN', 'RD', 'RND', 'DC', 'subtotal_HE_R', 'vac', 'inc_gen', 'inc_gen_2', 'inc_prof', 'lic_mat', 'lic_pat', 'lic_rem', 'lic_no_rem', 'lic_susp', 'lic_aband', 'subtotal_vac_inc_lic', 'add_0', 'add_1', 'add_2', 'ingr_salarial_ad', 'add_5', 'add_6', 'add_7', 'add_8', 'sub_trans', 'ingr_no_salarial', 'IBC_SS_1', 'total_dev', 'ded_pension', 'ded_EPS', 'ded_1', 'ded_2', 'ded_3', 'UVT_1', 'ded_4', 'ded_5', 'ded_6', 'ded_15', 'ded_7', 'ded_8', 'ded_10', 'ded_11', 'ded_total','pago_empleado']"/>
+          <t t-if="line.code in code_list">
+            <tr t-att-class="line_class" t-att-style="line_style" id="line_display">
+              <td><span t-field="line.name"/></td>
+              <td/>
+              <td><span t-if="line.quantity &gt; 1" t-esc="line.quantity"/></td>
+              <td class="text-end"><span t-esc="line.total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.company_id.currency_id}" t-att-style="'color:#875A7B;' if line.total &lt; 0 else ''"/></td>
+            </tr>
+          </t>        
+      </xpath>
+    </template>
+  </odoo>

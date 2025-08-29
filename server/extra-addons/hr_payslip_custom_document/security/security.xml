@@ -1,0 +1,6 @@
+<odoo>
+    <!-- Grupo -->
+    <record id="create_txt_group" model="res.groups">
+        <field name="name">Crear TXT - Payslip</field>
+    </record>
+</odoo>

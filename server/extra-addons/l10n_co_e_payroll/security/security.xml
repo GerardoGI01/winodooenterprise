@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+
+    <record id="e_payroll_group_id" model="res.groups">
+        <field name="name">Nomina Electronica / Payroll</field>
+        <field name="comment">Nomina electronica</field>
+    </record>
+
+</odoo>

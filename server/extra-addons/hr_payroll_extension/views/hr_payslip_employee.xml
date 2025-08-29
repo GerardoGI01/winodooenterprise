@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Heredar la vista de hr_payslip_by_employees -->
+        <record id="view_hr_payslip_by_employees_inherit" model="ir.ui.view">
+            <field name="name">hr.payslip.by.employees.inherit</field>
+            <field name="model">hr.payslip.employees</field>
+            <field name="inherit_id" ref="hr_payroll.view_hr_payslip_by_employees"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='o_row'][field[@name='structure_id']]" position="after">
+                    <separator string="Tipo Estructura"/>
+                    <div class="o_row">
+                        <p class="text-muted w-50">Set a specific type structure if you wish to make an extra payslip, based on their contracts configuration.</p>
+                        <field name="structure_type_id" widget="many2many_tags"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
+

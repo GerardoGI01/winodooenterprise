@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- List View -->
+    <record id="hr_loans_tree" model="ir.ui.view">
+        <field name="name">hr.loans.tree</field>
+        <field name="model">hr.loans</field>
+        <field name="type">list</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="identification"/>
+                <field name="employee_id"/>
+                <field name="type_loans"/>
+                <field name="start_discounting" string="Fecha Inicio"/>
+                <field name="duration"/>
+                <field name="requested_value" string="Valor Solicitado"/>
+                <field name="total"/>
+                <field name="state" widget="badge"
+                    decoration-info="state == 'active'"
+                    decoration-warning="state == 'cancel'"
+                    decoration-success="state == 'complete'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="hr_loans_search" model="ir.ui.view">
+        <field name="name">hr.loans.search</field>
+        <field name="model">hr.loans</field>
+        <field name="arch" type="xml">
+            <search string="Prestamos">
+                <field name="employee_id"/>
+                <field name="identification"/>
+                <group expand="1" string="Group By">
+                    <filter string="Tipo" name="User" context="{'group_by':'type_loans'}"/>
+                    <filter string="Empleado" name="Customer" context="{'group_by':'employee_id'}"/>
+                    <filter string="Estado" name="Product" context="{'group_by':'state'}"/>
+                    <separator/>
+                    <filter string="Estado" name="date" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="hr_loans_form" model="ir.ui.view">
+        <field name="name">hr.loans.form</field>
+        <field name="model">hr.loans</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Creación de Prestamos" duplicate="false">
+                <header style="position: absolute; top: 10px; right: 10px;">
+                    <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <group>
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="identification" readonly="1"/>
+                        <field name="date_end_accrued" readonly="1"/>
+                        <field name="attachment" widget="binary" filename="attachment_filename"/>
+                        <field name="observation" invisible="state != 'cancelado'"/>
+                    </group>
+                    <group>
+                        <field name="type_loans"/>
+                        <field name="concept"/>
+                        <field name="requested_value"/>
+                        <field name="refund_date"/>
+                        <field name="payment_date" readonly="1"/>
+                    </group>
+                    <group name="method" string="Método de descuento">
+                        <field name="method"/>
+                        <field name="duration"/>
+                        <field name="start_discounting"/>
+                        <field name="installment_value" readonly="1"/>
+                    </group>
+                    <group name="state_loans" string="Estado de Prestamo">
+                        <field name="accrued" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <field name="total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    </group>
+                    <notebook>
+                        <page string="Recibos de Nómina">
+                            <field name="payslip_ids" readonly="1">
+                                <list>
+                                    <field name="number"/>
+                                    <field name="employee_id"/>
+                                    <field name="date_from"/>
+                                    <field name="net_wage"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="hr_loans_tree_search" model="ir.actions.act_window">
+        <field name="name">Prestamos</field>
+        <field name="res_model">hr.loans</field>
+        <field name="view_mode">list</field>
+        <field name="search_view_id" ref="hr_loans_search"/>
+    </record>
+
+    <record id="action_menu_loans_form" model="ir.actions.act_window">
+        <field name="name">Prestamos</field>
+        <field name="res_model">hr.loans</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="hr_loans_tree"/>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem
+        id="menu_action_loans"
+        name="Prestamos"
+        parent="hr_work_entry_contract_enterprise.menu_hr_payroll_root"
+        action="action_menu_loans_form"
+        sequence="103"
+    />
+</odoo>

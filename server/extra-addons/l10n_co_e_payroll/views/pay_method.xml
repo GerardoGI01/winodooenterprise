@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <record model="payroll.metodo.pago" id="default_pay_method">
+      <field name="name">Transferencia Bancaria</field>
+      <field name="code">47</field>
+    </record>
+  </data>
+</odoo>

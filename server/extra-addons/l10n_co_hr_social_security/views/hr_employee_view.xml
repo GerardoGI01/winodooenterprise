@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_social_security_form" model="ir.ui.view">
+            <field name="name">view_social_security_form.form.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                
+              <xpath expr="//notebook/page[@name='hr_settings']" position="after">
+                   <page string="Seguridad Social" name="social_security" >
+                     <group col="1">
+                         <field name="type_iden"/>
+                         <field name="foreign"/>
+                         <field name="colom_foreign"/>
+                         <field name="foreign_date" invisible="colom_foreign != 'si'"/>
+                         <field name="department"/>
+                         <field name="type_city"/>
+                         <field name="economic_activity"/>
+                         <field name="center_work_2"/>
+                     </group>
+                    <group col="2">
+                         <field name="types_contributor"/>
+                         <field name="type_sub_iden"/>
+                         <field name="type_admin"/>
+                         <field name="types_admin"/>
+                     </group>
+                     <group col="1">
+                         <field name="risk_indicator"/>
+                         <field name="admin_risk"/>
+                         <field name="fee_salary"/>
+                         <field name="admin_ccf"/>
+                     </group>
+                   </page>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>

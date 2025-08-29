@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vacation_report,vacation.report.access,model_vacation_report,hr_holidays.group_hr_holidays_manager,1,1,1,1
+access_file_report_imp,vacation.report.access,model_file_imp,hr_holidays.group_hr_holidays_manager,1,1,1,1

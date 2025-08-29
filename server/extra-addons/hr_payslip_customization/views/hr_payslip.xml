@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!-- ========== FORM VIEW INHERIT ========== -->
+        <record id="view_hr_payslip_form_inherit" model="ir.ui.view">
+            <field name="name">hr.payslip.form.inherit</field>
+            <field name="model">hr.payslip</field>
+            <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+            <field name="arch" type="xml">
+
+                <!-- Personalización del statusbar -->
+                <field name="state" position="attributes">
+                    <attribute name="statusbar_visible">draft,done,pre_payslip,paid</attribute>
+                </field>
+
+                <!-- Botones adicionales en el header -->
+                <xpath expr="//header" position="inside">
+                    <button name="button_send_mail_and_change_state"
+                            string="Prenómina"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state == 'pre_payslip'"/>
+                    <button name="button_send_mail_and_change_state"
+                            string="En espera"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'pre_payslip'"/>
+                </xpath>
+
+                <!-- Badge después de payslip_run_id -->
+                <xpath expr="//field[@name='payslip_run_id']" position="after">
+                    <field name="email_state_badge" string="Prenómina" widget="html"/>
+                </xpath>
+
+                <!-- Campos adicionales en las líneas -->
+                <xpath expr="//form/sheet/notebook/page[@name='salary_computation']/field[@name='line_ids']/list/field[@name='quantity']" position="after">
+                    <field name="description" optional="show"/>
+                    <field name="other_amount" optional="show"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <!-- ========== TREE VIEW INHERIT ========== -->
+        <record id="view_hr_payslip_tree_inherit" model="ir.ui.view">
+            <field name="name">hr.payslip.tree.inherit</field>
+            <field name="model">hr.payslip</field>
+            <field name="inherit_id" ref="hr_payroll.view_hr_payslip_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="after">
+                    <field name="email_state_response"
+                           widget="badge"
+                           decoration-info="email_state_response == 'send'"
+                           decoration-success="email_state_response == 'accepted'"
+                           decoration-danger="email_state_response == 'rejected'"
+                           invisible="state != 'pre_payslip'"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- ========== EMAIL TEMPLATE ========== -->
+        <record id="email_template_for_payslip" model="mail.template">
+            <field name="name">Payslip Information</field>
+            <field name="model_id" ref="hr_payroll.model_hr_payslip"/>
+            <field name="email_from">{{ (object.company_id and object.company_id.email) or '' }}</field>
+            <field name="subject">Información de Nómina: {{ object.name }}</field>
+            <field name="email_to">{{ object.employee_id.work_email }}</field>
+            <field name="auto_delete" eval="False"/>
+            <field name="lang">{{ object.employee_id.lang }}</field>
+            <field name="body_html" type="html">
+                <div>
+                    <p>Hola,</p>
+                    <p>Esta es la información de la nómina:</p>
+                    <p><strong>Empleado:</strong> <t t-out="object.employee_id.name or ''"/></p>
+                    <p><strong>Nómina:</strong> <t t-out="object.name or ''"/></p>
+
+                    <!-- Info empleado -->
+                    <table class="table table-sm table-bordered">
+                        <tr>
+                            <td><strong>Empleado</strong></td>
+                            <td><strong>Cargo</strong></td>
+                            <td><strong>Periodo de pago</strong></td>
+                        </tr>
+                        <tr>
+                            <td><span t-field="object.employee_id"/></td>
+                            <td><span t-field="object.employee_id.job_title"/></td>
+                            <td>
+                                <t t-if="object.date_from &lt; object.contract_id.date_start">
+                                    <span t-field="object.contract_id.date_start"/>
+                                </t>
+                                <t t-else="">
+                                    <span t-field="object.date_from"/>
+                                </t>
+                                -
+                                <t t-if="object.contract_id.date_end and object.date_to &gt; object.contract_id.date_end">
+                                    <span t-field="object.contract_id.date_end"/>
+                                </t>
+                                <t t-else="">
+                                    <span t-field="object.date_to"/>
+                                </t>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- Salario básico -->
+                    <t t-set="holiday_attest_n1" t-value="object.env.ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays', raise_if_not_found=False)"/>
+                    <t t-set="holiday_attest_n" t-value="object.env.ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n_holidays', raise_if_not_found=False)"/>
+                    <table class="table table-sm" t-if="object.struct_id not in [holiday_attest_n, holiday_attest_n1]">
+                        <tr>
+                            <td><strong>Salario Básico</strong></td>
+                            <td style="color:#875A7B">
+                                <span t-esc="object.contract_id._get_contract_wage()"
+                                      t-options="{'widget': 'monetary', 'display_currency': object.company_id.currency_id}"/>
+                            </td>
+                            <td/>
+                            <td/>
+                        </tr>
+                    </table>
+
+                    <!-- Totales -->
+                    <div id="total">
+                        <table class="table table-sm">
+                            <thead class="o_black_border">
+                                <tr>
+                                    <th>Concepto</th>
+                                    <th>Horas</th>
+                                    <th>Días</th>
+                                    <th class="text-end">Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <!-- Worked days -->
+                                <t t-foreach="object.worked_days_line_ids" t-as="worked_days">
+                                    <t t-if="worked_days.code != 'OUT' and worked_days.code == 'BASIC'">
+                                        <tr>
+                                            <td><span t-field="worked_days.name"/></td>
+                                            <td><span t-field="worked_days.number_of_hours"/></td>
+                                            <td><span t-field="worked_days.number_of_days"/></td>
+                                            <td class="text-end">
+                                                <span t-esc="worked_days.amount"
+                                                      t-options="{'widget': 'monetary', 'display_currency': object.company_id.currency_id}"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+
+                                <!-- Payroll lines -->
+                                <t t-foreach="object.line_ids.filtered(lambda line: line.appears_on_payslip)" t-as="line">
+                                    <t t-set="line_style"/>
+                                    <t t-set="line_class"/>
+
+                                    <t t-if="line.code == 'NET'">
+                                        <t t-set="line_style" t-value="'color:#875A7B;'"/>
+                                        <t t-set="line_class" t-value="'o_total o_border_bottom fw-bold'"/>
+                                    </t>
+                                    <t t-if="line.code in ['BASIC','GROSS']">
+                                        <t t-set="line_style" t-value="'color:#00A09D;'"/>
+                                        <t t-set="line_class" t-value="'o_subtotal o_border_bottom'"/>
+                                    </t>
+
+                                    <t t-set="code_list" t-value="[
+                                        'total_dev','ded_pension','sub_trans','IBC_SS_1','d_30','d_OUT','d_vac_comp',
+                                        'd_vac','d_inc_gen','d_inc_gen_2','pr_quin_ant','d_inc_prof','d_lic_mat','d_lic_pat',
+                                        'd_lic_rem','d_lic_no_rem','d_lic_susp','d_lic_aband','d_trab','salario_base','HEO',
+                                        'HEN','HEOD','HEND','RN','RD','RND','DC','subtotal_HE_R','vac','inc_gen','inc_gen_2',
+                                        'inc_prof','lic_mat','lic_pat','lic_rem','lic_no_rem','lic_susp','lic_aband',
+                                        'subtotal_vac_inc_lic','add_0','add_1','add_2','ingr_salarial_ad','add_5','add_6',
+                                        'add_7','add_8','ingr_no_salarial','ded_EPS','ded_1','ded_2','ded_3','UVT_1','ded_4',
+                                        'ded_5','ded_6','ded_15','ded_7','ded_8','ded_10','ded_11','ded_total','pago_empleado'
+                                    ]"/>
+
+                                    <t t-if="line.code in code_list">
+                                        <tr t-att-class="line_class" t-att-style="line_style">
+                                            <td><span t-field="line.name"/></td>
+                                            <td/>
+                                            <td><span t-if="line.quantity &gt; 1" t-esc="line.quantity"/></td>
+                                            <td class="text-end">
+                                                <span t-esc="line.total"
+                                                      t-options="{'widget': 'monetary', 'display_currency': object.company_id.currency_id}"
+                                                      t-att-style="'color:#875A7B;' if line.total &lt; 0 else ''"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Links de acción -->
+                    <p>
+                        <a t-attf-href="{{ object.get_base_url() }}/payslip/response/{{object.id}}/accept/{{object.token}}"
+                           style="background-color:#4CAF50;color:white;padding:10px 20px;text-decoration:none;">
+                           Aceptar
+                        </a>
+                        <a t-attf-href="{{ object.get_base_url() }}/payslip/response/{{object.id}}/reject/{{object.token}}"
+                           style="background-color:#f44336;color:white;padding:10px 20px;text-decoration:none;">
+                           Rechazar
+                        </a>
+                    </p>
+
+                    <p>Saludos,</p>
+                </div>
+            </field>
+        </record>
+
+    </data>
+</odoo>

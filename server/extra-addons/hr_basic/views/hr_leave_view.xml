@@ -1,0 +1,48 @@
+<?xml version=  "1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_hr_leave_type_form" model="ir.ui.view">
+        <field name="name">hr_leave_type.form.inherit</field>
+        <field name="model">hr.leave.type</field>
+        <field name="inherit_id" ref="hr_work_entry_holidays.work_entry_type_leave_form_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='work_entry_type_id']" position="after">
+                <field name="type_absence"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_hr_leave_form" model="ir.ui.view">
+        <field name="name">hr.leave.form.inherit</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form_manager"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='holiday_status_id']" position="after">
+                <field name="days_count" invisible="1"/>
+                <field name="days_pending" invisible="1"/>
+                <field name="alert_days" invisible="1"/>
+            </xpath>
+           <xpath expr="//form/sheet" position="before">
+                <div class="alert alert-danger" role="alert" style="margin-bottom: 0px;"  invisible="alert_days != True">
+                    <p style="font-weight: bold; padding-left: 80px;">
+                        Te quedan <field name="days_pending" readonly="1"/> días pendientes por periodo.<br/>
+                    </p>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="period"/>
+                <field name="date_contract" invisible="1"/>
+                <field name="period_init" invisible="1"/>
+                <field name="period_end" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+    </data>
+</odoo>
+
+
+
+
+
+
+
+

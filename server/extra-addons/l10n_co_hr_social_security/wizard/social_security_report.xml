@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="social_security_report_wizard_form" model="ir.ui.view">
+    <field name="name">social.security.report.wizard.form</field>
+    <field name="model">hr.social.security</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+        <form>
+            <group>
+                <label for="start_date_year" string="Desde "/>
+                    <div>
+                        <field name="start_date_month" class="oe_inline"/> - <field name="start_date_year" class="oe_inline"/>
+                    </div>
+            </group>
+            <group>
+                <label for="end_date_year" string="Hasta "/>
+                    <div>
+                        <field name="end_date_month" class="oe_inline"/> - <field name="end_date_year" class="oe_inline"/>
+                    </div>
+            </group>
+            <group>
+                <label for="date_year_pension" string="Fecha Pensión "/>
+                    <div>
+                        <field name="date_month_pension" class="oe_inline"/> - <field name="date_year_pension" class="oe_inline"/>
+                    </div>
+            </group>
+            <group>
+                <field name="code"/>
+                <field name="employee_arl"/>
+                <field name="company_name"/>
+                <field name="company_id" invisible = "1"/>
+            </group>
+            <footer>
+                <button name="generate_social_report" string="Generar Informe" type="object" class="oe_highlight" />
+                <button special='cancel' string='Cancelar' class="oe_highlight oe_link"/>
+            </footer>
+        </form>
+        </field>
+    </record>
+
+
+    <record id="action_menu_security_social" model="ir.actions.act_window">
+        <field name="name">Seguridad Social</field>
+        <field name="res_model">hr.social.security</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="social_security_report_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+            id="menu_action_menu_wizard"
+            name="Seguridad Social"
+            parent="hr_payroll.menu_hr_payroll_report"
+            action="action_menu_security_social"
+            />
+
+</odoo>

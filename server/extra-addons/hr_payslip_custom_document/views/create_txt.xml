@@ -1,0 +1,8 @@
+<odoo>
+    <data>
+        <record id="create_txt_group" model="res.groups">
+            <field name="name">Crear TXT</field>            
+            <field name="comment">Grupo para usuarios que pueden acceder al modelo crear TXT.</field>
+        </record>
+    </data>
+</odoo>

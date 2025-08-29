@@ -1,0 +1,40 @@
+<odoo>
+    <data>
+        <record id="view_hr_payslip_run_inherited_form" model="ir.ui.view">
+            <field name="name">hr.payslip.run.inherited.form</field>
+            <field name="model">hr.payslip.run</field>
+            <field name="inherit_id" ref="hr_payroll.hr_payslip_run_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//form/header" position="inside">                    
+                    <button
+                        string="Generar Archivo PAB"
+                        type="object"
+                        name="llamar_generar_archivo_txt" class="oe_highlight"  invisible="mostrar_campos_modulo == False"/>
+                </xpath>
+
+                <xpath expr="//field[@name='company_id']" position="after">
+                    
+                    <field name="mostrar_campos_modulo" invisible="1"/>
+                    <field name="bancolombia_otros" widget="boolean_toggle"/>
+                    <field name="fecha_de_pago"
+                        invisible="mostrar_campos_modulo == False"
+                        required="mostrar_campos_modulo == True"/>
+                    <field name="secuencia_envio"
+                        invisible="mostrar_campos_modulo == False"
+                        required="mostrar_campos_modulo == True"/>
+                    <field name="numero_cuenta_cliente" 
+                        invisible="mostrar_campos_modulo == False"
+                        required="mostrar_campos_modulo == True"/>
+                    <field name="tipo_cuenta" 
+                        invisible="mostrar_campos_modulo == False"
+                        required="mostrar_campos_modulo == True"/>
+                    <field name="descripcion_transacciones" 
+                        invisible="mostrar_campos_modulo == False"
+                        required="mostrar_campos_modulo == True"/>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>

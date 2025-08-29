@@ -1,0 +1,25 @@
+<?xml version=  "1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_hr_leave_form_security" model="ir.ui.view">
+        <field name="name">hr_leave_type.form.security</field>
+        <field name="model">hr.leave.type</field>
+        <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='time_type']" position="after">
+                <field name="type_security"/>
+            </xpath>
+
+        </field>
+    </record>
+    </data>
+</odoo>
+
+
+
+
+
+
+
+

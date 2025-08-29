@@ -1,0 +1,25 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+payroll_dian_security_id,payroll.dian,l10n_co_e_payroll.model_payroll_dian,l10n_co_e_payroll.e_payroll_group_id,1,1,1,1
+hr_salary_attachment_security_id,hr.salary.attachment,hr_payroll.model_hr_salary_attachment,l10n_co_e_payroll.e_payroll_group_id,1,1,1,1
+hr_payslip_security_id,hr.payslip,hr_payroll.model_hr_payslip,l10n_co_e_payroll.e_payroll_group_id,1,1,1,1
+payroll_dian_document_security_id,payroll.dian.document,l10n_co_e_payroll.model_payroll_dian_document,l10n_co_e_payroll.e_payroll_group_id,1,1,1,1
+hr_salary_rule_category_security_id,hr.salary.rule.category,hr_payroll.model_hr_salary_rule_category,l10n_co_e_payroll.e_payroll_group_id,1,1,1,1
+hr_payslip_worked_days_security_id,	hr.payslip.worked_days,hr_payroll.model_hr_payslip_worked_days,l10n_co_e_payroll.e_payroll_group_id,1,1,1,1
+hr_payslip_input_user_security_id,hr.payslip.input.user,hr_payroll.model_hr_payslip_input,l10n_co_e_payroll.e_payroll_group_id,1,1,1,1
+hr_work_entry_security_id,hr.work.entry,hr_work_entry.model_hr_work_entry,l10n_co_e_payroll.e_payroll_group_id,1,1,1,1
+hr_payroll_structure_security_id,hr.payroll.structure,hr_payroll.model_hr_payroll_structure,l10n_co_e_payroll.e_payroll_group_id,1,1,1,1
+hr_payslip_line_security_id,hr.payslip.line,hr_payroll.model_hr_payslip_line,l10n_co_e_payroll.e_payroll_group_id,1,1,1,1
+payroll_metodo_pago_security_id,payroll.metodo.pago,l10n_co_e_payroll.model_payroll_metodo_pago,l10n_co_e_payroll.e_payroll_group_id,1,1,1,1
+hr_salary_rule_security_id,hr.salary.rule,hr_payroll.model_hr_salary_rule,l10n_co_e_payroll.e_payroll_group_id,1,1,1,1
+hr_payslip_input_type_security_id,hr.payslip.input.type,hr_payroll.model_hr_payslip_input_type,l10n_co_e_payroll.e_payroll_group_id,1,1,1,1
+payroll_dian_document_line_security_id,payroll.dian.document.line,l10n_co_e_payroll.model_payroll_dian_document_line,l10n_co_e_payroll.e_payroll_group_id,1,1,1,1
+hr_payroll_edit_payslip_lines_wizard_security_id,hr.payroll.edit.payslip.lines.wizard,hr_payroll.model_hr_payroll_edit_payslip_lines_wizard,l10n_co_e_payroll.e_payroll_group_id,1,1,1,1
+hr_payroll_edit_payslip_worked_days_line_security_id,hr.payroll.edit.payslip.worked.days.line,hr_payroll.model_hr_payroll_edit_payslip_worked_days_line,l10n_co_e_payroll.e_payroll_group_id,1,1,1,1
+hr_payroll_edit_payslip_line_security_id,hr.payroll.edit.payslip.line,hr_payroll.model_hr_payroll_edit_payslip_line,l10n_co_e_payroll.e_payroll_group_id,1,1,1,1
+hr_payslip_employees_security_id,hr.payslip.employees,hr_payroll.model_hr_payslip_employees,l10n_co_e_payroll.e_payroll_group_id,1,1,1,1
+hr_payroll_report_security_id,hr.payroll.report,hr_payroll.model_hr_payroll_report,l10n_co_e_payroll.e_payroll_group_id,1,1,1,1
+hr_payslip_run_security_id,hr.payslip.run,hr_payroll.model_hr_payslip_run,l10n_co_e_payroll.e_payroll_group_id,1,1,1,1
+hr_rule_parameter_security_id,hr.rule.parameter,hr_payroll.model_hr_rule_parameter,l10n_co_e_payroll.e_payroll_group_id,1,1,1,1
+hr_work_entry_report_security_id,hr.work.entry.report,hr_payroll.model_hr_work_entry_report,l10n_co_e_payroll.e_payroll_group_id,1,1,1,1
+hr_work_entry_type_security_id,hr.work.entry.type,hr_payroll.model_hr_work_entry_type,l10n_co_e_payroll.e_payroll_group_id,1,1,1,1
+hr_rule_parameter_value_security_id,hr.rule.parameter.value,hr_payroll.model_hr_rule_parameter_value,l10n_co_e_payroll.e_payroll_group_id,1,1,1,1

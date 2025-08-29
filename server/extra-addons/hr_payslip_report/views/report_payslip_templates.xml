@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="hr_payroll.report_payslip_lang">
+        <t t-name="hr_payroll.report_payslip_lang">
+        <t t-name="hr_payroll.report_payslip_lang">
+        <t t-call="web.html_container">
+            <t t-foreach="inside_foreach_docs or docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 style="color: #333; font-size: 24px; font-weight: bold; margin-bottom: 4px; border-bottom: 1px solid #666;" t-field="o.name"/>
+                        <t t-set="is_invalid" t-value="o._is_invalid()"/>
+                        <t t-if="is_invalid">
+                            <strong><t t-esc="is_invalid"/></strong>
+                        </t>
+                        <table name="employee-infos" class="table table-sm table-bordered">
+                            <tr>
+                                <td class="w-33"><strong>Empleado</strong></td>
+                                <td class="w-33"><strong>Designación</strong></td>
+                                <td class="w-33"><strong>Período de pago</strong></td>
+                            </tr>
+                            <tr>
+                                <td><span t-field="o.employee_id"/></td>
+                                <td><span t-field="o.employee_id.job_title"/></td>
+                                <td><span t-field="o.date_from"/> - <span t-field="o.date_to"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Email</strong></td>
+                                <td><strong>Identificación</strong></td>
+                                <td><strong>Calculado en</strong></td>
+                            </tr>
+                            <tr>
+                                <td><span t-field="o.employee_id.work_email"/></td>
+                                <td><span t-field="o.employee_id.identification_id"/></td>
+                                <td><span t-field="o.compute_date"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Fecha De Contrato</strong></td>
+                                <td class="40"><span t-esc="o.contract_id.date_start"/></td>
+                            </tr>
+                        </table>
+
+
+                        <table class="table table-sm">
+                            <tr>
+                                <td class="w-25"><strong>Salario base</strong></td>
+                                <td style="color:#875A7B" class="w-25">
+                                    <span t-esc="o.line_ids.filtered(lambda line: line.code == 'BASIC').total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.company_id.currency_id}"/>
+                                </td>
+                            </tr>
+                        </table>
+                        <div id="total">
+                            <table class="table table-sm">
+                                <thead class="o_black_border">
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Numero de Dias Trabajados</th>
+                                        <th>Valor Devengado</th>
+                                        <th>Descuentos</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                  <t t-set="work_days" t-value="0"/>  <!-- Inicializa la variable work_days a 0 -->
+                                  <t t-set="d_trab" t-value="0"/>
+                                  <t t-set="d_OUT" t-value="0"/>
+                                  <t t-set="d_vac_comp" t-value="0"/>
+                                  <t t-set="d_vac" t-value="0"/>
+                                  <t t-set="d_vac1" t-value="0"/>
+                                  <t t-set="d_nohab" t-value="0"/>
+                                  <t t-set="d_inc_gen" t-value="0"/>
+                                  <t t-set="d_inc_gen_2" t-value="0"/>
+                                  <t t-set="d_inc_prof" t-value="0"/>
+                                  <t t-set="d_lic_mat" t-value="0"/>
+                                  <t t-set="d_lic_pat" t-value="0"/>
+                                  <t t-set="d_lic_rem" t-value="0"/>
+                                  <t t-set="d_lic_no_rem" t-value="0"/>
+                                  <t t-set="d_lic_susp" t-value="0"/>
+                                  <t t-set="d_lic_aband" t-value="0"/>
+                                  <span t-foreach="o.worked_days_line_ids" t-as="worked_days">
+                                      <t t-if="worked_days.code == 'WORK100'" t-set="work_days" t-value="worked_days.number_of_days"/>
+                                      <t t-if="worked_days.code == 'd_trab'" t-set="d_trab" t-value="d_trab + worked_days.number_of_days"/>
+                                      <t t-if="worked_days.code == 'OUT'" t-set="d_OUT" t-value="d_OUT + worked_days.number_of_days"/>
+                                      <t t-if="worked_days.code == 'd_vac_comp'" t-set="d_vac_comp" t-value="d_vac_comp + worked_days.number_of_days"/>
+                                      <t t-if="worked_days.code == 'd_vac'" t-set="d_vac" t-value="d_vac + worked_days.number_of_days"/>
+                                      <t t-if="worked_days.code == 'd_vac1'" t-set="d_vac1" t-value="d_vac1 + worked_days.number_of_days"/>
+                                      <t t-if="worked_days.code == 'd_nohab'" t-set="d_nohab" t-value="d_nohab + worked_days.number_of_days"/>
+                                      <t t-if="worked_days.code == 'd_inc_gen'" t-set="d_inc_gen" t-value="d_inc_gen + worked_days.number_of_days"/>
+                                      <t t-if="worked_days.code == 'd_inc_gen_2'" t-set="d_inc_gen_2" t-value="d_inc_gen_2 + worked_days.number_of_days"/>
+                                      <t t-if="worked_days.code == 'd_inc_prof'" t-set="d_inc_prof" t-value="d_inc_prof + worked_days.number_of_days"/>
+                                      <t t-if="worked_days.code == 'd_lic_mat'" t-set="d_lic_mat" t-value="d_lic_mat + worked_days.number_of_days"/>
+                                      <t t-if="worked_days.code == 'd_lic_pat'" t-set="d_lic_pat" t-value="d_lic_pat + worked_days.number_of_days"/>
+                                      <t t-if="worked_days.code == 'd_lic_rem'" t-set="d_lic_rem" t-value="d_lic_rem + worked_days.number_of_days"/>
+                                      <t t-if="worked_days.code == 'd_lic_no_rem'" t-set="d_lic_no_rem" t-value="d_lic_no_rem + worked_days.number_of_days"/>
+                                      <t t-if="worked_days.code == 'd_lic_susp'" t-set="d_lic_susp" t-value="d_lic_susp + worked_days.number_of_days"/>
+                                      <t t-if="worked_days.code == 'd_lic_aband'" t-set="d_lic_aband" t-value="d_lic_aband + worked_days.number_of_days"/>
+                                  </span>
+                                    <span t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip and line.code in ['d_trab', 'd_OUT', 'd_vac_comp', 'd_vac', 'd_vac1', 'd_nohab', 'd_inc_gen', 'd_inc_gen_2', 'd_inc_prof', 'd_lic_mat', 'd_lic_pat', 'd_lic_rem', 'd_lic_no_rem', 'd_lic_susp', 'd_lic_aband', 'salario_base', 'HEO', 'HEN', 'HEOD', 'HEND', 'RN', 'RD', 'RND', 'DC', 'vac', 'vac_1', 'inc_gen', 'inc_gen_2', 'inc_prof', 'lic_mat', 'lic_pat', 'lic_rem', 'lic_no_rem', 'no_hab', 'add_1', 'add_0', 'add_2', 'add_3', 'add_4', 'add_18', 'add_5', 'add_7', 'add_8', 'add_9', 'add_10', 'add_16', 'add_12', 'add_13', 'add_14', 'add_17', 'sub_trans1', 'sub_trans', 'total_dev', 'lic_susp', 'lic_aband', 'ded_12', 'ded_1', 'ded_2', 'ded_3', 'ded_4', 'ded_5', 'ded_13', 'ded_14', 'ded_9', 'ded_8', 'ded_11', 'ded_10', 'ded_16', 'ded_17', 'ded_18', 'ded_19', 'ded_20', 'ded_21', 'ded_0', 'ded_0_1', 'ded_pension', 'ded_EPS', 'ded_total', 'pago_empleado'])" t-as="line">
+                                        <t t-if="line.total &gt; 0">
+                                            <t t-set="line_style"/>
+                                            <t t-set="line_class"/>
+                                            <t t-if="'ded' in line.code">
+                                                <t t-set="line_style" t-value="'color:#ED8A8A;'"/>
+                                            </t>
+                                            <t t-if="line.code == 'NET'">
+                                                <t t-set="line_style" t-value="'color:#875A7B;'"/>
+                                                <t t-set="line_class" t-value="'o_total o_border_bottom'"/>
+                                            </t>
+                                            <t t-if="(line.code == 'BASIC') or (line.code == 'GROSS')">
+                                                <t t-set="line_style" t-value="'color:#00A09D;'"/>
+                                                <t t-set="line_class" t-value="'o_subtotal o_border_bottom'"/>
+                                            </t>
+                                            <t t-if="'total' in line.code or 'subtotal' in line.code or 'pago_empleado' in line.code">
+                                                <t t-set="line_style" t-value="line_style+'font-weight:bold;'"/>
+                                            </t>
+                                            <tr t-att-class="line_class" t-att-style="line_style" t-if="(line.code != 'BASIC')">
+                                                <td><span t-field="line.name"/></td>
+                                                <td><span t-if="'d_trab' in line.code" t-esc="work_days"/>
+                                                <span t-if="'d_trab' in line.code" t-esc="d_trab"/>
+                                                <span t-if="'d_OUT' in line.code" t-esc="d_OUT"/>
+                                                <span t-if="'d_vac_comp' in line.code" t-esc="d_vac_comp"/>
+                                                <span t-if="'d_vac' in line.code" t-esc="d_vac"/>
+                                                <span t-if="'d_vac1' in line.code" t-esc="d_vac1"/>
+                                                <span t-if="'d_nohab' in line.code" t-esc="d_nohab"/>
+                                                <span t-if="'d_inc_gen' in line.code" t-esc="d_inc_gen"/>
+                                                <span t-if="'d_inc_gen_2' in line.code" t-esc="d_inc_gen_2"/>
+                                                <span t-if="'d_inc_prof' in line.code" t-esc="d_inc_prof"/>
+                                                <span t-if="'d_lic_mat' in line.code" t-esc="d_lic_mat"/>
+                                                <span t-if="'d_lic_pat' in line.code" t-esc="d_lic_pat"/>
+                                                <span t-if="'d_lic_rem' in line.code" t-esc="d_lic_rem"/>
+                                                <span t-if="'d_lic_no_rem' in line.code" t-esc="d_lic_no_rem"/>
+                                                <span t-if="'d_lic_susp' in line.code" t-esc="d_lic_susp"/>
+                                                <span t-if="'d_lic_aband' in line.code" t-esc="d_lic_aband"/>
+                                                </td>
+                                                <td>
+                                                    <span t-if="line.code in ['add_1', 'add_0', 'add_2', 'add_3', 'add_4', 'add_18', 'add_5', 'add_7', 'add_8', 'add_9', 'add_10', 'add_16', 'add_12', 'add_13', 'add_14', 'add_17', 'salario_base', 'HEO', 'HEN', 'HEOD', 'HEND', 'RN', 'RD', 'RND', 'DC', 'vac', 'vac_1', 'inc_gen', 'inc_gen_2', 'inc_prof', 'lic_mat', 'lic_pat', 'lic_rem', 'lic_no_rem', 'no_hab', 'sub_trans1', 'sub_trans', 'total_dev', 'pago_empleado']" t-esc="line.total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.company_id.currency_id}"/>
+                                                </td>
+                                                <td>
+                                                    <span t-if="line.code in ['ded_12', 'ded_1', 'ded_2', 'ded_3', 'ded_4', 'ded_5', 'ded_13', 'ded_14', 'ded_9', 'ded_8', 'ded_11', 'ded_10', 'ded_16', 'ded_17', 'ded_18', 'ded_19', 'ded_20', 'ded_21', 'ded_0', 'ded_0_1',  'lic_susp', 'lic_aband', 'ded_pension', 'ded_EPS', 'ded_total']" t-esc="line.total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.company_id.currency_id}"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </span>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p t-if="o.net_wage &gt;= 0">Total a pagar <td><span t-field="o.employee_id.bank_account_id"/></td><span t-field="o.employee_id"/>: <td><span t-field="o.net_wage"/></td></p>
+                        <p t-if="o.net_wage &lt; 0">El importe neto se recuperará de la primera retribución positiva establecida con posterioridad a ésta.</p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </t>
+    </t>
+    </template>
+</odoo>
